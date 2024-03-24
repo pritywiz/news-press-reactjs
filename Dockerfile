@@ -19,8 +19,15 @@ COPY . .
 # Build the React app
 RUN npm run build
 
-# Expose the port the app runs on
-EXPOSE 3000
+# Fetching the latest nginx image
+FROM nginx
 
-# Command to run the app
-CMD ["npm", "start"]
+# Copying built assets from builder
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Expose port 80 for the Nginx server
+EXPOSE 80
+
+# Start Nginx when the container runs
+CMD ["nginx", "-g", "daemon off;"]
+
